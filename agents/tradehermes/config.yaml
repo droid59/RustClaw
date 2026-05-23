@@ -8,14 +8,17 @@ system:
   log_level: "INFO"
 
 markets:
-  exchange: "binance"        # binance | coinbase | alpaca | kraken
+  exchange: "alpaca"         # alpaca | binance | coinbase | yfinance
   symbols:
-    - "BTC/USDT"
+    - "SPY"
+    - "QQQ"
+    - "AAPL"
   timeframe: "1h"            # 1m | 5m | 15m | 1h | 4h | 1d
+  data_source: "yfinance"    # yfinance (no key) | alpaca (needs key)
 
 risk:
   initial_capital: 10000     # USD equivalent
-  max_risk_per_trade: 0.01   # 1% of capital per trade
+  max_risk_per_trade: 0.01   # 1% of capital per trade ($100 max per trade)
   max_open_positions: 3
   max_drawdown_limit: 0.15   # 15% — halt trading if breached
   daily_loss_limit: 0.03     # 3% daily loss → stop for the day

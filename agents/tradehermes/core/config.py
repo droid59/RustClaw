@@ -24,9 +24,10 @@ class StrategyConfig:
 
 @dataclass
 class MarketConfig:
-    exchange: str = "binance"
-    symbols: List[str] = field(default_factory=lambda: ["BTC/USDT"])
+    exchange: str = "alpaca"
+    symbols: List[str] = field(default_factory=lambda: ["SPY"])
     timeframe: str = "1h"
+    data_source: str = "yfinance"
 
 
 @dataclass
@@ -44,9 +45,10 @@ class Config:
         c.mode = raw.get("system", {}).get("mode", "paper")
         m = raw.get("markets", {})
         c.markets = MarketConfig(
-            exchange=m.get("exchange", "binance"),
-            symbols=m.get("symbols", ["BTC/USDT"]),
+            exchange=m.get("exchange", "alpaca"),
+            symbols=m.get("symbols", ["SPY"]),
             timeframe=m.get("timeframe", "1h"),
+            data_source=m.get("data_source", "yfinance"),
         )
         r = raw.get("risk", {})
         c.risk = RiskConfig(

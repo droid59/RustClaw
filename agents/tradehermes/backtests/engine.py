@@ -88,7 +88,6 @@ def run_backtest(df: pd.DataFrame, signal_fn: Callable, params: dict,
 def _compute_metrics(equity: pd.Series, trades: pd.DataFrame, initial: float) -> dict:
     if len(equity) < 2:
         return {}
-    returns = equity.pct_change().dropna()
     total_return = (equity.iloc[-1] - initial) / initial
     wins = trades[trades["pnl"] > 0] if len(trades) else pd.DataFrame()
     losses = trades[trades["pnl"] <= 0] if len(trades) else pd.DataFrame()
@@ -97,17 +96,28 @@ def _compute_metrics(equity: pd.Series, trades: pd.DataFrame, initial: float) ->
     peak = equity.cummax()
     dd = (peak - equity) / peak
     max_dd = dd.max()
-    annual_factor = np.sqrt(252 * 24)  # hourly bars
-    sharpe = (returns.mean() / returns.std() * annual_factor) if returns.std() > 0 else 0
-    neg_ret = returns[returns < 0]
-    sortino = (returns.mean() / neg_ret.std() * annual_factor) if len(neg_ret) > 0 and neg_ret.std() > 0 else 0
-    calmar = (total_return / max_dd) if max_dd > 0 else 0
+
+    # Use per-trade returns for risk metrics to avoid sparse-returns distortion
+    if len(trades) >= 2:
+        trade_returns = trades["pnl"].values / initial
+        n_per_year = 252          # assume ~1 trade/day as base freq
+        annual_factor = np.sqrt(n_per_year)
+        mu = trade_returns.mean()
+        sigma = trade_returns.std()
+        sharpe = (mu / sigma * annual_factor) if sigma > 0 else 0.0
+        neg = trade_returns[trade_returns < 0]
+        downside = neg.std() if len(neg) >= 2 else sigma
+        sortino = (mu / downside * annual_factor) if downside > 0 else 0.0
+    else:
+        sharpe = sortino = 0.0
+
+    calmar = (total_return / max_dd) if max_dd > 0 else 0.0
     return {
         "n_trades": len(trades),
         "win_rate": len(wins) / len(trades) if len(trades) > 0 else 0,
         "profit_factor": gross_profit / gross_loss,
-        "sharpe": sharpe,
-        "sortino": sortino,
+        "sharpe": round(sharpe, 3),
+        "sortino": round(sortino, 3),
         "max_drawdown": max_dd,
         "calmar": calmar,
         "total_return": total_return,
