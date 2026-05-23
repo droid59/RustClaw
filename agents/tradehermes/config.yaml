@@ -1,0 +1,60 @@
+# TradeHermes Configuration
+# Edit this file with your settings before starting
+
+system:
+  name: "TradeHermes"
+  version: "0.1.0"
+  mode: "paper"              # paper | live
+  log_level: "INFO"
+
+markets:
+  exchange: "binance"        # binance | coinbase | alpaca | kraken
+  symbols:
+    - "BTC/USDT"
+  timeframe: "1h"            # 1m | 5m | 15m | 1h | 4h | 1d
+
+risk:
+  initial_capital: 10000     # USD equivalent
+  max_risk_per_trade: 0.01   # 1% of capital per trade
+  max_open_positions: 3
+  max_drawdown_limit: 0.15   # 15% — halt trading if breached
+  daily_loss_limit: 0.03     # 3% daily loss → stop for the day
+
+strategy:
+  name: "RSIMomentum_v1"
+  params:
+    rsi_period: 14
+    rsi_oversold: 30
+    rsi_overbought: 70
+    volume_ma_period: 20
+    atr_period: 14
+    atr_sl_multiplier: 2.0
+    atr_tp_multiplier: 3.0
+
+execution:
+  order_type: "market"       # market | limit
+  slippage_model: 0.001      # 0.1% slippage assumption in backtest
+
+alerts:
+  telegram_enabled: false
+  telegram_bot_token: ""
+  telegram_chat_id: ""
+  discord_enabled: false
+  discord_webhook: ""
+
+api_keys:
+  # Set via environment variables — do NOT hardcode here
+  # export BINANCE_API_KEY=...
+  # export BINANCE_SECRET=...
+  # export ALPACA_API_KEY=...
+  # export ALPACA_SECRET=...
+  binance_key_env: "BINANCE_API_KEY"
+  binance_secret_env: "BINANCE_SECRET"
+  alpaca_key_env: "ALPACA_API_KEY"
+  alpaca_secret_env: "ALPACA_SECRET"
+
+self_improvement:
+  enabled: true
+  review_interval_hours: 24
+  min_trades_for_review: 10
+  improvement_threshold: 0.05  # 5% improvement in Sharpe to accept variant

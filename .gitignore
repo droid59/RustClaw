@@ -45,3 +45,5 @@ Thumbs.db
 *.swo
 *~
 .serena/
+agents/tradehermes/**/__pycache__
+agents/tradehermes/**/*.pyc
