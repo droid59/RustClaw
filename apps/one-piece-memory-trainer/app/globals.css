@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body { background: #07090f; color: #e6eaf2; }
+body { -webkit-tap-highlight-color: transparent; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none; }
+  .btn-primary { @apply btn bg-straw-400 text-ink-950 hover:bg-straw-300; }
+  .btn-ghost { @apply btn bg-ink-700/70 text-slate-100 hover:bg-ink-600; }
+  .btn-danger { @apply btn bg-blood-500/15 text-blood-400 hover:bg-blood-500/25; }
+  .btn-sm { @apply px-3 py-1.5 text-xs rounded-lg; }
+  .panel { @apply rounded-2xl border border-white/5 bg-ink-800/80 p-4 sm:p-5; }
+  .input { @apply w-full rounded-xl border border-white/10 bg-ink-900 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-straw-400/70 focus:ring-2 focus:ring-straw-400/20; }
+  .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-400; }
+  .chip { @apply inline-flex items-center rounded-full bg-ink-700 px-2.5 py-0.5 text-[11px] font-semibold text-slate-300; }
+  .pro-badge { @apply inline-flex items-center rounded-md bg-straw-400/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-straw-400; }
+  .effect { @apply whitespace-pre-line text-sm leading-relaxed text-slate-200; }
+}
+
+@keyframes flash-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
+.flash-in { animation: flash-in 0.18s ease-out; }
+@keyframes shrink { from { width: 100%; } to { width: 0%; } }
